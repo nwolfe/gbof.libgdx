@@ -9,17 +9,22 @@ import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class GameScreen extends ScreenAdapter {
+    private final OrthographicCamera camera;
     private final Stage stage;
     private final MapRenderer levelRenderer;
 
     GameScreen() {
-        stage = new Stage();
+        camera = new OrthographicCamera(
+                Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        stage = new Stage(new ScreenViewport(camera));
 		stage.addActor(new Actor() {
             @Override
             public void draw(Batch batch, float parentAlpha) {
-                batch.draw(Assets.instance.sampleBgImg, 0, 0);
+//                batch.draw(Assets.instance.sampleBgImg, 0, 0);
+//                batch.draw(Assets.instance.playerIdleFrames[0], 0, 0);
             }
         });
 
@@ -34,7 +39,8 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(1, 0 ,0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
-        levelRenderer.setView((OrthographicCamera) stage.getCamera());
+        camera.update();
+        levelRenderer.setView(camera);
         levelRenderer.render();
         stage.draw();
     }

@@ -8,8 +8,8 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "G L E I P N I R :: Binding Of Fenrir";
-		config.width = 640;
-		config.height = 480;
+		config.width = 1024;
+		config.height = 960;
 		new LwjglApplication(new Gleipnir(), config);
 	}
 }
