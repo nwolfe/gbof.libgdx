@@ -5,12 +5,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
-class Assets {
-    static Assets instance;
+public class Assets {
+    public static Assets instance;
 
-    Texture sampleBgImg;
-    TiledMap sampleLevel;
-//    TextureRegion[] playerIdleFrames;
+    public Texture sampleBgImg;
+    public TiledMap sampleLevel;
+//    public TextureRegion[] playerIdleFrames;
 
     static void load() {
         if (instance == null)
@@ -24,7 +24,7 @@ class Assets {
 
     private final AssetManager manager;
 
-    Assets() {
+    private Assets() {
         manager = new AssetManager();
         manager.setLoader(TiledMap.class,
                 new TmxMapLoader(manager.getFileHandleResolver()));

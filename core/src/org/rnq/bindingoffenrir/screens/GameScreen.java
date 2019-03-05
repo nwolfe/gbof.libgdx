@@ -1,4 +1,4 @@
-package org.rnq.bindingoffenrir;
+package org.rnq.bindingoffenrir.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -10,13 +10,14 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import org.rnq.bindingoffenrir.Assets;
 
 public class GameScreen extends ScreenAdapter {
     private final OrthographicCamera camera;
     private final Stage stage;
     private final MapRenderer levelRenderer;
 
-    GameScreen() {
+    public GameScreen() {
         camera = new OrthographicCamera(
                 Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage = new Stage(new ScreenViewport(camera));

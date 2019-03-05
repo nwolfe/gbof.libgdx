@@ -2,6 +2,7 @@ package org.rnq.bindingoffenrir;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import org.rnq.bindingoffenrir.screens.GameScreen;
 
 
 public class Gleipnir extends Game {
