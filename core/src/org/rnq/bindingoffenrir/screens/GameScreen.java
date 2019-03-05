@@ -33,7 +33,7 @@ public class GameScreen extends ScreenAdapter {
 //        OrthographicCamera camera = (OrthographicCamera) stage.getCamera();
 //        camera.setToOrtho(false, 16, 15);
         levelRenderer = new OrthogonalTiledMapRenderer(
-                Assets.instance.sampleLevel, 4);
+                Assets.instance.sampleLevel.get(), 4);
     }
 
     @Override
