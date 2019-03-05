@@ -9,6 +9,7 @@ public class Gleipnir extends Game {
 
 	@Override
 	public void create () {
+	    Assets.load();
 		gameScreen = new GameScreen();
 		setScreen(gameScreen);
 	}
@@ -16,5 +17,6 @@ public class Gleipnir extends Game {
 	@Override
 	public void dispose() {
 	    gameScreen.dispose();
+	    Assets.dispose();
 	}
 }
