@@ -2,7 +2,10 @@ package org.rnq.bindingoffenrir;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
-import org.rnq.bindingoffenrir.screens.*;
+import org.rnq.bindingoffenrir.screens.GameScreen;
+import org.rnq.bindingoffenrir.screens.PauseScreen;
+import org.rnq.bindingoffenrir.screens.SettingsScreen;
+import org.rnq.bindingoffenrir.screens.TitleScreen;
 
 
 public class Gleipnir extends Game {
@@ -10,7 +13,6 @@ public class Gleipnir extends Game {
     public Screen gameScreen;
     public _LinkedScreen settingsScreen;
     public _LinkedScreen pauseScreen;
-    private Screen previous;
 
 	@Override
 	public void create () {
