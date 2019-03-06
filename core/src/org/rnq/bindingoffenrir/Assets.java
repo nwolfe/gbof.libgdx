@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +17,7 @@ public class Assets {
 
     public Asset<Texture> sampleBgImg = image("badlogic.jpg");
     public Asset<TiledMap> sampleLevel = map("sample/sample_level.tmx");
-//    public Asset<Skin> uiSkin = skin("pixthulhu/pixthulhu-ui.json");
+    public Asset<Skin> uiSkin = skin("pixthulhu/pixthulhu-ui.json");
 
     static void load() {
         if (instance == null)
@@ -81,8 +82,8 @@ public class Assets {
                 String.format("assets/map/%s", filename), TiledMap.class);
     }
 
-//    private static Asset<Skin> skin(String filename) {
-//        return new Asset<Skin>(
-//                String.format("assets/skin/%s", filename), Skin.class);
-//    }
+    private static Asset<Skin> skin(String filename) {
+        return new Asset<Skin>(
+                String.format("assets/skin/%s", filename), Skin.class);
+    }
 }
