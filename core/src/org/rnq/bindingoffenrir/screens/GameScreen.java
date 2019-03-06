@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.rnq.bindingoffenrir.Assets;
 import org.rnq.bindingoffenrir.Gleipnir;
+import org.rnq.bindingoffenrir.Player;
 
 public class GameScreen extends ScreenAdapter {
     private final Gleipnir game;
@@ -22,18 +23,19 @@ public class GameScreen extends ScreenAdapter {
         this.game = game;
         camera = new OrthographicCamera(
                 Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage = new Stage(new ScreenViewport(camera));
-//		stage.addActor(new Actor() {
-//            @Override
-//            public void draw(Batch batch, float parentAlpha) {
-//                batch.draw(Assets.instance.sampleBgImg.get(), 0, 0);
-//            }
-//        });
 
-//        OrthographicCamera camera = (OrthographicCamera) stage.getCamera();
+        // Don't scale any art in code; make them all the same
+        // in the art editor. Then, configure the viewport to
+        // apply a uniform scaling when rendering them.
+        ScreenViewport viewport = new ScreenViewport(camera);
+        viewport.setUnitsPerPixel(1 / 4f);
+
+        stage = new Stage(viewport);
+        stage.addActor(new Player());
+
 //        camera.setToOrtho(false, 16, 15);
         levelRenderer = new OrthogonalTiledMapRenderer(
-                Assets.instance.sampleLevel.get(), 4);
+                Assets.instance.sampleLevel.get());
     }
 
     @Override

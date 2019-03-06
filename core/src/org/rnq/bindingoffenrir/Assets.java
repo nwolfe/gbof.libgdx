@@ -2,6 +2,7 @@ package org.rnq.bindingoffenrir;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -13,11 +14,12 @@ import java.util.Collection;
 // Click into the definition to see what classes it supports.
 @SuppressWarnings("SpellCheckingInspection")
 public class Assets {
-    public static Assets instance;
-
     public Asset<Texture> sampleBgImg = image("badlogic.jpg");
     public Asset<TiledMap> sampleLevel = map("sample/sample_level.tmx");
     public Asset<Skin> uiSkin = skin("pixthulhu/pixthulhu-ui.json");
+    public Spritesheet playerIdleStrip = spritesheet("char_idle_strip10.png", 10, 1);
+
+    public static Assets instance;
 
     static void load() {
         if (instance == null)
@@ -42,7 +44,7 @@ public class Assets {
         private void load(AssetManager manager) {
             manager.load(filename, type);
         }
-        private void set(AssetManager manager) {
+        protected void set(AssetManager manager) {
             asset = manager.get(filename, type);
         }
         public T get() {
@@ -52,6 +54,40 @@ public class Assets {
         @Override
         public String toString() {
             return String.format("%s[%s]", type.getSimpleName(), filename);
+        }
+    }
+
+    // Assumes the spritesheet has only one animation in it
+    public static class Spritesheet extends Asset<Texture> {
+        private TextureRegion[] frames;
+        private final int columns;
+        private final int rows;
+
+        private Spritesheet(String filename, int columns, int rows) {
+            super(filename, Texture.class);
+            this.columns = columns;
+            this.rows = rows;
+        }
+
+        @Override
+        protected void set(AssetManager manager) {
+            super.set(manager);
+
+            // Assume spritesheet contains frames of
+            // equal size and they are all aligned
+            TextureRegion[][] tmp = TextureRegion.split(get(),
+                    get().getWidth() / columns, get().getHeight() / rows);
+
+            // Place into one-dimensional array for Animation
+            frames = new TextureRegion[columns * rows];
+            int index = 0;
+            for (int i = 0; i < rows; ++i)
+                for (int j = 0; j < columns; ++j)
+                    frames[index++] = tmp[i][j];
+        }
+
+        public TextureRegion[] getFrames() {
+            return frames;
         }
     }
 
@@ -75,6 +111,10 @@ public class Assets {
     private static Asset<Texture> image(String filename) {
         return new Asset<Texture>(
                 String.format("assets/img/%s", filename), Texture.class);
+    }
+
+    private static Spritesheet spritesheet(String filename, int cols, int rows) {
+        return new Spritesheet(String.format("assets/img/%s", filename), cols, rows);
     }
 
     private static Asset<TiledMap> map(String filename) {
