@@ -17,7 +17,7 @@ public class Assets {
     public Asset<Texture> sampleBgImg = image("badlogic.jpg");
     public Asset<TiledMap> sampleLevel = map("sample/sample_level.tmx");
     public Asset<Skin> uiSkin = skin("pixthulhu/pixthulhu-ui.json");
-    public Spritesheet playerIdleStrip = spritesheet("char_idle_strip10.png", 10, 1);
+    public Spritesheet playerIdleStrip = spritesheet("player_idle.png", 2, 1);
 
     public static Assets instance;
 
