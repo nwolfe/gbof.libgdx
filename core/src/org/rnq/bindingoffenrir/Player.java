@@ -30,15 +30,21 @@ public class Player extends Actor implements StepCallback {
         }
     }
 
-    private final Animation<TextureRegion> idleAnimation;
+    // Animation
     private float stateTime = 0f;
+
+    // Physics
     private final Body body;
 
+    // State-specific behavior
+    private final PlayerState idleState;
+    private PlayerState currentState;
+
     private Player(float x, float y, World world) {
-        idleAnimation = new Animation<TextureRegion>(0.7f,
-                Assets.instance.playerIdleStrip.getFrames());
-        TextureRegion frame = idleAnimation.getKeyFrames()[0];
+        idleState = new IdleState();
+        TextureRegion frame = idleState.animation.getKeyFrames()[0];
         setBounds(x, y, frame.getRegionWidth(), frame.getRegionHeight());
+        currentState = idleState;
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -56,7 +62,7 @@ public class Player extends Actor implements StepCallback {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         stateTime += Gdx.graphics.getDeltaTime();
-        TextureRegion frame = idleAnimation.getKeyFrame(stateTime, true);
+        TextureRegion frame = currentState.getAnimationFrame(stateTime);
         batch.draw(frame, getX(), getY());
     }
 
@@ -64,5 +70,23 @@ public class Player extends Actor implements StepCallback {
     public void onStep() {
         Vector2 v = body.getPosition();
         setPosition(v.x - getWidth() / 2, v.y - getHeight() / 2);
+    }
+
+    private abstract class PlayerState {
+        Animation<TextureRegion> animation;
+
+        abstract TextureRegion getAnimationFrame(float stateTime);
+    }
+
+    private class IdleState extends PlayerState {
+        IdleState() {
+            animation = new Animation<TextureRegion>(0.7f,
+                    Assets.instance.playerIdleStrip.getFrames());
+        }
+
+        @Override
+        public TextureRegion getAnimationFrame(float stateTime) {
+            return animation.getKeyFrame(stateTime, true);
+        }
     }
 }
