@@ -10,17 +10,19 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import org.rnq.bindingoffenrir.Objects;
 import org.rnq.bindingoffenrir.Assets;
 import org.rnq.bindingoffenrir.Gleipnir;
-import org.rnq.bindingoffenrir.Actors;
 
 public class GameScreen extends ScreenAdapter {
     private final Gleipnir game;
-    private final OrthographicCamera camera;
     private final Stage stage;
+    private final World world;
+    private final OrthographicCamera camera;
     private final MapRenderer levelRenderer;
 
     public GameScreen(Gleipnir game) {
@@ -35,6 +37,7 @@ public class GameScreen extends ScreenAdapter {
         viewport.setUnitsPerPixel(1 / 4f);
 
         stage = new Stage(viewport);
+        world = new World(new Vector2(0, -98f), true);
 
 //        camera.setToOrtho(false, 16, 15);
         TiledMap map = Assets.instance.sampleLevel.get();
@@ -43,13 +46,9 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void buildLevel(TiledMap map) {
-        for (MapLayer layer : map.getLayers()) {
-            for (MapObject object : layer.getObjects()) {
-                Actor actor = Actors.build(object);
-                if (actor != null)
-                    stage.addActor(actor);
-            }
-        }
+        for (MapLayer layer : map.getLayers())
+            for (MapObject object : layer.getObjects())
+                Objects.build(object, stage, world);
     }
 
     @Override

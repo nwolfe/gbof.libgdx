@@ -7,19 +7,22 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class Player extends Actor {
-    static class Builder implements Actors.Builder<Player> {
+    static class Builder implements Objects.Builder {
         @Override
         public boolean canBuild(MapObject object) {
             return "player".equals(object.getName());
         }
 
         @Override
-        public Player build(MapObject object) {
+        public void build(MapObject object, Stage stage, World world) {
             Rectangle r = ((RectangleMapObject) object).getRectangle();
-            return new Player(r.x, r.y);
+            Player p = new Player(r.x, r.y);
+            stage.addActor(p);
         }
     }
 
