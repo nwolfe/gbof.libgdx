@@ -1,4 +1,4 @@
-package org.rnq.bindingoffenrir.actors;
+package org.rnq.bindingoffenrir;
 
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.scenes.scene2d.Actor;

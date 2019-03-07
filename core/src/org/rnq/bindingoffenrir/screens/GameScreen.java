@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.rnq.bindingoffenrir.Assets;
 import org.rnq.bindingoffenrir.Gleipnir;
-import org.rnq.bindingoffenrir.actors.Actors;
+import org.rnq.bindingoffenrir.Actors;
 
 public class GameScreen extends ScreenAdapter {
     private final Gleipnir game;

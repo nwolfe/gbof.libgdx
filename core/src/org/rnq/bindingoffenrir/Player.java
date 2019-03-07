@@ -1,4 +1,4 @@
-package org.rnq.bindingoffenrir.actors;
+package org.rnq.bindingoffenrir;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -8,7 +8,6 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import org.rnq.bindingoffenrir.Assets;
 
 public class Player extends Actor {
     static class Builder implements Actors.Builder<Player> {
