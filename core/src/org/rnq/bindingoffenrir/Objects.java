@@ -12,6 +12,7 @@ public class Objects {
     static {
         // Register all map object builders here...
         all.add(new Player.Builder());
+        all.add(new Ground.Builder());
     }
 
     interface Builder {

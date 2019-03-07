@@ -11,13 +11,16 @@ import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.rnq.bindingoffenrir.Assets;
 import org.rnq.bindingoffenrir.Gleipnir;
 import org.rnq.bindingoffenrir.Objects;
+import org.rnq.bindingoffenrir.StepCallback;
 
 public class GameScreen extends ScreenAdapter {
     private final Gleipnir game;
@@ -39,7 +42,7 @@ public class GameScreen extends ScreenAdapter {
         viewport.setUnitsPerPixel(1 / 4f);
 
         stage = new Stage(viewport);
-        world = new World(new Vector2(0, 0), true);
+        world = new World(new Vector2(0, -98f), true);
         debugRenderer = new Box2DDebugRenderer();
 
         TiledMap map = Assets.instance.sampleLevel.get();
@@ -53,12 +56,18 @@ public class GameScreen extends ScreenAdapter {
                 Objects.build(object, stage, world);
     }
 
+    private static final Array<Body> bodies = new Array<Body>();
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 0 ,0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         world.step(1/60f, 6, 2);
+        world.getBodies(bodies);
+        for (Body b : bodies)
+            if (b.getUserData() != null)
+                ((StepCallback) b.getUserData()).onStep();
         camera.update();
         levelRenderer.setView(camera);
         levelRenderer.render();

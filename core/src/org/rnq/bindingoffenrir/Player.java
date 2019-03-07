@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -14,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-public class Player extends Actor {
+public class Player extends Actor implements StepCallback {
     static class Builder implements Objects.Builder {
         @Override
         public boolean canBuild(MapObject object) {
@@ -44,9 +45,12 @@ public class Player extends Actor {
         bodyDef.position.set(x + getWidth() / 2, y + getHeight() / 2);
         body = world.createBody(bodyDef);
         PolygonShape box = new PolygonShape();
-        box.setAsBox(getWidth() / 2, getHeight() / 2);
+        // Assume the player art is twice as wide as
+        // everything else and scale it down accordingly
+        box.setAsBox(getWidth() / 4, getHeight() / 2);
         body.createFixture(box, 1.0f);
         box.dispose();
+        body.setUserData(this);
     }
 
     @Override
@@ -54,5 +58,11 @@ public class Player extends Actor {
         stateTime += Gdx.graphics.getDeltaTime();
         TextureRegion frame = idleAnimation.getKeyFrame(stateTime, true);
         batch.draw(frame, getX(), getY());
+    }
+
+    @Override
+    public void onStep() {
+        Vector2 v = body.getPosition();
+        setPosition(v.x - getWidth() / 2, v.y - getHeight() / 2);
     }
 }
