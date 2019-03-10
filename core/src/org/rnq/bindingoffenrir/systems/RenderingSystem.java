@@ -7,25 +7,28 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import org.rnq.bindingoffenrir.LevelManager;
 import org.rnq.bindingoffenrir.components.TextureComponent;
 import org.rnq.bindingoffenrir.components.TransformComponent;
 
 import java.util.Comparator;
 
 public class RenderingSystem extends SortedIteratingSystem {
-    static final float PPM = 16.0f;
+    static final float PPM = 4f;// 16f;
     static final float VIEWPORT_WIDTH = Gdx.graphics.getWidth() / PPM;
     static final float VIEWPORT_HEIGHT = Gdx.graphics.getHeight() / PPM;
-    public static final float PIXELS_TO_METERS = 1.0f / PPM;
+    public static final float PIXELS_TO_METERS = 1f / PPM;
 
+    private final LevelManager levelManager;
     private final SpriteBatch batch;
     private final Array<Entity> renderQueue;
     public final OrthographicCamera camera;
 
-    public RenderingSystem(SpriteBatch batch) {
+    public RenderingSystem(SpriteBatch batch, LevelManager levelManager) {
         super(Family.all(
                 TransformComponent.class, TextureComponent.class).get(),
-                new ZComparator());
+                new ZComparator(), 1);
+        this.levelManager = levelManager;
         this.batch = batch;
         renderQueue = new Array<Entity>();
         camera = new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
@@ -45,6 +48,7 @@ public class RenderingSystem extends SortedIteratingSystem {
         batch.setProjectionMatrix(camera.combined);
         batch.enableBlending();
         batch.begin();
+        levelManager.currentLevel().render(camera);
         for (Entity entity : renderQueue)
             renderEntity(entity);
         batch.end();

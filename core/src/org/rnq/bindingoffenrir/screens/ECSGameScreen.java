@@ -8,10 +8,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import org.rnq.bindingoffenrir.LevelManager;
 import org.rnq.bindingoffenrir.systems.RenderingSystem;
 
 public class ECSGameScreen extends ScreenAdapter {
     private final ScreenManager screenManager;
+    private final LevelManager levelManager;
     private final World world;
     private final PooledEngine engine;
     private final SpriteBatch batch;
@@ -22,7 +24,8 @@ public class ECSGameScreen extends ScreenAdapter {
         // world.setContactListener();
         batch = new SpriteBatch();
         engine = new PooledEngine();
-        RenderingSystem renderingSystem = new RenderingSystem(batch);
+        levelManager = new LevelManager();
+        RenderingSystem renderingSystem = new RenderingSystem(batch, levelManager);
         engine.addSystem(renderingSystem);
     }
 
@@ -39,6 +42,7 @@ public class ECSGameScreen extends ScreenAdapter {
     public void dispose() {
         world.dispose();
         batch.dispose();
+        levelManager.dispose();
     }
 
     @Override
