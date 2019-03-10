@@ -2,7 +2,7 @@ package org.rnq.bindingoffenrir;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
-import org.rnq.bindingoffenrir.screens.GameScreen;
+import org.rnq.bindingoffenrir.screens.ECSGameScreen;
 import org.rnq.bindingoffenrir.screens.PauseScreen;
 import org.rnq.bindingoffenrir.screens.SettingsScreen;
 import org.rnq.bindingoffenrir.screens.TitleScreen;
@@ -17,7 +17,7 @@ public class Gleipnir extends Game {
 	@Override
 	public void create () {
 	    Assets.load();
-		gameScreen = new GameScreen(this);
+		gameScreen = new ECSGameScreen(this);
 		titleScreen = new TitleScreen(this);
 		settingsScreen = new _LinkedScreen(new SettingsScreen(this));
 		pauseScreen = new _LinkedScreen(new PauseScreen(this));
