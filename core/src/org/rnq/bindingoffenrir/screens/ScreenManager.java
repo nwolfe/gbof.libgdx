@@ -7,30 +7,31 @@ import org.rnq.bindingoffenrir.Gleipnir;
 public class ScreenManager {
     private final Screen titleScreen;
     private final Screen gameScreen;
-    private final LinkedScreen settingsScreen;
-    private final LinkedScreen pauseScreen;
+    private final PreviousScreen settingsScreen;
+    private final PreviousScreen pauseScreen;
     private final Game game;
 
     public ScreenManager(Gleipnir game) {
         this.game = game;
         titleScreen = new TitleScreen(this);
-//        gameScreen = new ECSGameScreen(this);
-        gameScreen = new GameScreen(this);
-        settingsScreen = new LinkedScreen(new SettingsScreen(this));
-        pauseScreen = new LinkedScreen(new PauseScreen(this));
+        gameScreen = new ECSGameScreen(this);
+//        gameScreen = new GameScreen(this);
+        settingsScreen = new PreviousScreen(new SettingsScreen(this));
+        pauseScreen = new PreviousScreen(new PauseScreen(this));
     }
 
     private void setScreen(Screen screen) {
         // Store the back link on the screen to build a chain,
         // for cases like: Game -> Pause -> Settings
-        if (screen instanceof LinkedScreen)
-            ((LinkedScreen) screen).previous = game.getScreen();
+        if (screen instanceof PreviousScreen)
+            ((PreviousScreen) screen).previous = game.getScreen();
         game.setScreen(screen);
     }
 
     void backToPreviousScreen() {
-        if (game.getScreen() instanceof LinkedScreen)
-            game.setScreen(((LinkedScreen) game.getScreen()).previous);
+        Screen current = game.getScreen();
+        if (current instanceof PreviousScreen)
+            game.setScreen(((PreviousScreen) current).previous);
     }
 
     public void dispose() {
@@ -57,47 +58,47 @@ public class ScreenManager {
     }
 
     // Decorator Pattern
-    private static class LinkedScreen implements Screen {
-        private final Screen wrapped;
+    private static class PreviousScreen implements Screen {
+        private final Screen decorated;
         private Screen previous;
 
-        private LinkedScreen(Screen decorated) {
-            wrapped = decorated;
+        private PreviousScreen(Screen decorated) {
+            this.decorated = decorated;
         }
 
         @Override
         public void show() {
-            wrapped.show();
+            decorated.show();
         }
 
         @Override
         public void render(float delta) {
-            wrapped.render(delta);
+            decorated.render(delta);
         }
 
         @Override
         public void resize(int width, int height) {
-            wrapped.resize(width, height);
+            decorated.resize(width, height);
         }
 
         @Override
         public void pause() {
-            wrapped.pause();
+            decorated.pause();
         }
 
         @Override
         public void resume() {
-            wrapped.resume();
+            decorated.resume();
         }
 
         @Override
         public void hide() {
-            wrapped.hide();
+            decorated.hide();
         }
 
         @Override
         public void dispose() {
-            wrapped.dispose();
+            decorated.dispose();
         }
     }
 }
