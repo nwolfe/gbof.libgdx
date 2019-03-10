@@ -18,20 +18,19 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.rnq.bindingoffenrir.Assets;
-import org.rnq.bindingoffenrir.Gleipnir;
 import org.rnq.bindingoffenrir.Objects;
 import org.rnq.bindingoffenrir.StepCallback;
 
 public class GameScreen extends ScreenAdapter {
-    private final Gleipnir game;
+    private final ScreenManager screenManager;
     private final Stage stage;
     private final World world;
     private final OrthographicCamera camera;
     private final MapRenderer levelRenderer;
     private final Box2DDebugRenderer debugRenderer;
 
-    public GameScreen(Gleipnir game) {
-        this.game = game;
+    public GameScreen(ScreenManager screenManager) {
+        this.screenManager = screenManager;
         camera = new OrthographicCamera(
                 Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -73,7 +72,7 @@ public class GameScreen extends ScreenAdapter {
         levelRenderer.render();
         stage.draw();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-            game.setScreen(game.pauseScreen);
+            screenManager.goToPauseScreen();
         if (Gdx.input.isKeyPressed(Input.Keys.F1))
             debugRenderer.render(world, camera.combined);
     }

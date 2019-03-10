@@ -10,14 +10,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.rnq.bindingoffenrir.Assets;
-import org.rnq.bindingoffenrir.Gleipnir;
 
 public class SettingsScreen extends ScreenAdapter {
-    private final Gleipnir game;
+    private final ScreenManager screenManager;
     private final Stage stage;
 
-    public SettingsScreen(Gleipnir game) {
-        this.game = game;
+    public SettingsScreen(ScreenManager screenManager) {
+        this.screenManager = screenManager;
         stage = new Stage(new ScreenViewport());
         backButton();
     }
@@ -36,7 +35,7 @@ public class SettingsScreen extends ScreenAdapter {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.backToPreviousScreen();
+                screenManager.backToPreviousScreen();
             }
         });
         stage.addActor(back);
@@ -49,7 +48,7 @@ public class SettingsScreen extends ScreenAdapter {
         stage.draw();
         stage.act(delta);
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-            game.backToPreviousScreen();
+            screenManager.backToPreviousScreen();
     }
 
     @Override

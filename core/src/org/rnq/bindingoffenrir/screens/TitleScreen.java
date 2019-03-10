@@ -12,14 +12,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.rnq.bindingoffenrir.Assets;
-import org.rnq.bindingoffenrir.Gleipnir;
 
 public class TitleScreen extends ScreenAdapter {
-    private final Gleipnir game;
+    private final ScreenManager screenManager;
     private final Stage stage;
 
-    public TitleScreen(Gleipnir game) {
-        this.game = game;
+    public TitleScreen(ScreenManager screenManager) {
+        this.screenManager = screenManager;
         stage = new Stage(new ScreenViewport());
         title();
         playButton();
@@ -57,7 +56,7 @@ public class TitleScreen extends ScreenAdapter {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(game.gameScreen);
+                screenManager.goToGameScreen();
             }
         });
         stage.addActor(play);
@@ -77,7 +76,7 @@ public class TitleScreen extends ScreenAdapter {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(game.settingsScreen);
+                screenManager.goToSettingsScreen();
             }
         });
         stage.addActor(settings);
