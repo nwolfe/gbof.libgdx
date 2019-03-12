@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import org.rnq.bindingoffenrir.Constants;
 import org.rnq.bindingoffenrir.LevelManager;
 import org.rnq.bindingoffenrir.components.TextureComponent;
 import org.rnq.bindingoffenrir.components.TransformComponent;
@@ -14,10 +15,8 @@ import org.rnq.bindingoffenrir.components.TransformComponent;
 import java.util.Comparator;
 
 public class RenderingSystem extends SortedIteratingSystem {
-    static final float PPM = 4f;// 16f;
-    static final float VIEWPORT_WIDTH = Gdx.graphics.getWidth() / PPM;
-    static final float VIEWPORT_HEIGHT = Gdx.graphics.getHeight() / PPM;
-    public static final float PIXELS_TO_METERS = 1f / PPM;
+    private static final float VIEWPORT_WIDTH = Gdx.graphics.getWidth() / Constants.PPM;
+    private static final float VIEWPORT_HEIGHT = Gdx.graphics.getHeight() / Constants.PPM;
 
     private final LevelManager levelManager;
     private final SpriteBatch batch;
@@ -68,8 +67,8 @@ public class RenderingSystem extends SortedIteratingSystem {
         float y = transform.position.y - originY;
         batch.draw(texture.region,
                 x, y, originX, originY, width, height,
-                transform.scale.x * PIXELS_TO_METERS,
-                transform.scale.y * PIXELS_TO_METERS,
+                transform.scale.x * Constants.PIXELS_TO_METERS,
+                transform.scale.y * Constants.PIXELS_TO_METERS,
                 transform.rotation);
     }
 

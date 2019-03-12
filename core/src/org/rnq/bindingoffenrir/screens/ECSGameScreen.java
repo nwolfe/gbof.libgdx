@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import org.rnq.bindingoffenrir.Constants;
 import org.rnq.bindingoffenrir.LevelManager;
 import org.rnq.bindingoffenrir.systems.RenderingSystem;
 
@@ -20,7 +21,7 @@ public class ECSGameScreen extends ScreenAdapter {
 
     public ECSGameScreen(ScreenManager screenManager) {
         this.screenManager = screenManager;
-        world = new World(new Vector2(0, -9.8f), true);
+        world = new World(new Vector2(0, -Constants.GRAVITY), true);
         // world.setContactListener();
         batch = new SpriteBatch();
         engine = new PooledEngine();
