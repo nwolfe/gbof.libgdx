@@ -9,8 +9,8 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = Constants.TITLE;
-		config.width = Constants.WIDTH;
-		config.height = Constants.HEIGHT;
+		config.width = Constants.WINDOW_WIDTH;
+		config.height = Constants.WINDOW_HEIGHT;
 		new LwjglApplication(new Gleipnir(), config);
 	}
 }

@@ -3,7 +3,6 @@ package org.rnq.bindingoffenrir.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
@@ -15,9 +14,6 @@ import org.rnq.bindingoffenrir.components.TransformComponent;
 import java.util.Comparator;
 
 public class RenderingSystem extends SortedIteratingSystem {
-    private static final float VIEWPORT_WIDTH = Gdx.graphics.getWidth() / Constants.PPM;
-    private static final float VIEWPORT_HEIGHT = Gdx.graphics.getHeight() / Constants.PPM;
-
     private final LevelManager levelManager;
     private final SpriteBatch batch;
     private final Array<Entity> renderQueue;
@@ -30,8 +26,13 @@ public class RenderingSystem extends SortedIteratingSystem {
         this.levelManager = levelManager;
         this.batch = batch;
         renderQueue = new Array<Entity>();
-        camera = new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-        camera.position.set(VIEWPORT_WIDTH / 2f, VIEWPORT_HEIGHT / 2f, 0);
+
+        // Convert pixels to "meters" to pass into camera
+//        camera = new OrthographicCamera(Constants.WIDTH / Constants.PPM, Constants.HEIGHT / Constants.PPM);
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, Constants.GAME_WIDTH_IN_TILES, Constants.GAME_HEIGHT_IN_TILES);
+//        camera.setToOrtho(false, Constants.GAME_WIDTH_IN_PIXELS, Constants.GAME_HEIGHT_IN_PIXELS);
+//        camera.position.set(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f, 0);
     }
 
     @Override
@@ -45,12 +46,18 @@ public class RenderingSystem extends SortedIteratingSystem {
         // renderQueue.sort(); ?
         camera.update();
         batch.setProjectionMatrix(camera.combined);
-        batch.enableBlending();
+
         batch.begin();
+        batch.disableBlending();
         levelManager.currentLevel().render(camera);
+        batch.enableBlending();
+        batch.end();
+
+        batch.begin();
         for (Entity entity : renderQueue)
             renderEntity(entity);
         batch.end();
+
         renderQueue.clear();
     }
 
@@ -63,8 +70,9 @@ public class RenderingSystem extends SortedIteratingSystem {
         float height = texture.region.getRegionHeight();
         float originX = width / 2f;
         float originY = height / 2f;
-        float x = transform.position.x - originX;
-        float y = transform.position.y - originY;
+        float x = (transform.position.x * Constants.PIXELS_TO_METERS) - originX;
+        float y = (transform.position.y * Constants.PIXELS_TO_METERS) - originY;
+//        System.out.printf("x,y: %s, %s\n", x, y);
         batch.draw(texture.region,
                 x, y, originX, originY, width, height,
                 transform.scale.x * Constants.PIXELS_TO_METERS,
