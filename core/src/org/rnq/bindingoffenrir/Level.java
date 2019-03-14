@@ -10,7 +10,10 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import org.rnq.bindingoffenrir.components.PhysicsComponent;
 import org.rnq.bindingoffenrir.components.PlayerComponent;
 import org.rnq.bindingoffenrir.components.TextureComponent;
 import org.rnq.bindingoffenrir.components.TransformComponent;
@@ -50,28 +53,36 @@ public class Level {
         texture.region = Assets.instance.playerIdleStrip.getFrames()[0];
         player.add(texture);
 
+        // Convert the position from pixels -> meters now so it's
+        // easier to sync with Box2D, which works in meters, later
+        float width = texture.region.getRegionWidth() * Constants.PIXELS_TO_METERS;
+        float height = texture.region.getRegionHeight() * Constants.PIXELS_TO_METERS;
+
+        // Cut in half since we need to convert from center-based position to
+        // corner-based position. Assume the player art is twice as wide as
+        // everything else so cut it in half again.
+        width /= 4f;
+        height /= 2f;
+
         // TODO Animation
 
         TransformComponent transform = new TransformComponent();
         Rectangle r = ((RectangleMapObject) object).getRectangle();
-        transform.position.set(r.x, r.y, 1f);
+        float x = (r.x * Constants.PIXELS_TO_METERS) + width;
+        float y = (r.y * Constants.PIXELS_TO_METERS) + height;
+        transform.position.set(x, y, 1f);
         player.add(transform);
 
-//        PhysicsComponent physics = new PhysicsComponent();
-//        float width = texture.region.getRegionWidth();
-//        float height = texture.region.getRegionHeight();
-//        BodyDef bodyDef = new BodyDef();
-//        bodyDef.type = BodyDef.BodyType.DynamicBody;
-//        bodyDef.position.set(r.x + width / 2f, r.y + height / 2f);
-//        physics.body = world.createBody(bodyDef);
-//        PolygonShape box = new PolygonShape();
-//        // Assume the player art is twice as wide as
-//        // everything else and scale it down accordingly
-//        box.setAsBox(width / 4, height / 2);
-//        physics.body.createFixture(box, 1f);
-//        box.dispose();
-//        player.add(physics);
-//        System.out.printf("building: %s, %s\n", bodyDef.position.x, bodyDef.position.y);
+        PhysicsComponent physics = new PhysicsComponent();
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(x, y);
+        physics.body = world.createBody(bodyDef);
+        PolygonShape box = new PolygonShape();
+        box.setAsBox(width, height);
+        physics.body.createFixture(box, 1f);
+        box.dispose();
+        player.add(physics);
 
         engine.addEntity(player);
     }

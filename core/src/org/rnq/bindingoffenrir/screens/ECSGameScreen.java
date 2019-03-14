@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.rnq.bindingoffenrir.Constants;
 import org.rnq.bindingoffenrir.LevelManager;
+import org.rnq.bindingoffenrir.systems.PhysicsDebugSystem;
 import org.rnq.bindingoffenrir.systems.RenderingSystem;
 
 public class ECSGameScreen extends ScreenAdapter {
@@ -34,6 +35,7 @@ public class ECSGameScreen extends ScreenAdapter {
                 Constants.GAME_HEIGHT_IN_TILES, renderingSystem.camera);
 
         engine.addSystem(renderingSystem);
+        engine.addSystem(new PhysicsDebugSystem(world, renderingSystem.camera));
 
         levelManager.currentLevel().build(engine, world);
     }
