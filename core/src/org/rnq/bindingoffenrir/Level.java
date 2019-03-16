@@ -14,10 +14,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import org.rnq.bindingoffenrir.components.PhysicsComponent;
-import org.rnq.bindingoffenrir.components.PlayerComponent;
-import org.rnq.bindingoffenrir.components.TextureComponent;
-import org.rnq.bindingoffenrir.components.TransformComponent;
+import org.rnq.bindingoffenrir.components.*;
 
 public class Level {
     private final TiledMap map;
@@ -90,6 +87,13 @@ public class Level {
         player.add(physics);
         physics.body.setUserData(player);
 
+        CollisionComponent collision = new CollisionComponent();
+        player.add(collision);
+
+        TypeComponent type = new TypeComponent();
+        type.type = TypeComponent.Type.PLAYER;
+        player.add(type);
+
         return player;
     }
 
@@ -115,6 +119,13 @@ public class Level {
         box.dispose();
         ground.add(physics);
         physics.body.setUserData(ground);
+
+        CollisionComponent collision = new CollisionComponent();
+        ground.add(collision);
+
+        TypeComponent type = new TypeComponent();
+        type.type = TypeComponent.Type.GROUND;
+        ground.add(type);
 
         return ground;
     }

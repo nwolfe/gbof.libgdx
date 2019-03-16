@@ -6,6 +6,7 @@ public class TypeComponent implements Component {
     public enum Type {
         PLAYER,
         ENEMY,
+        GROUND,
         // SCENERY,
         OTHER
     }

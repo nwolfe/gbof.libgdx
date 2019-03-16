@@ -3,6 +3,7 @@ package org.rnq.bindingoffenrir.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import org.rnq.bindingoffenrir.components.CollisionComponent;
 import org.rnq.bindingoffenrir.components.PlayerComponent;
@@ -23,10 +24,14 @@ public class CollisionSystem extends IteratingSystem {
             if (type != null) {
                 switch (type.type) {
                     case ENEMY:
-                        System.out.println("player hit enemy");
+                        Gdx.app.log("collision", "player hit enemy");
+                        break;
+                    case GROUND:
+                        Gdx.app.log("collision", "player hit ground");
                         break;
                     case OTHER:
-                        System.out.println("player hit other");
+                        Gdx.app.log("collision", "player hit other");
+                        break;
                 }
                 // Collision handled; clear the component
                 collision.collidedWith = null;
@@ -37,6 +42,7 @@ public class CollisionSystem extends IteratingSystem {
     public static final class ContactListener implements com.badlogic.gdx.physics.box2d.ContactListener {
         @Override
         public void beginContact(Contact contact) {
+            Gdx.app.log("collision", "Begin contact");
             Fixture fa = contact.getFixtureA();
             Fixture fb = contact.getFixtureB();
             if (fa.getBody().getUserData() instanceof Entity) {
@@ -55,13 +61,14 @@ public class CollisionSystem extends IteratingSystem {
                 CollisionComponent collisionB = Components.collision.get(other);
                 if (collisionA != null)
                     collisionA.collidedWith = other;
-                else if (collisionB != null)
+                if (collisionB != null)
                     collisionB.collidedWith = e;
             }
         }
 
         @Override
         public void endContact(Contact contact) {
+            Gdx.app.log("collision", "End contact");
         }
 
         @Override
