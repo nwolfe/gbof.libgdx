@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import org.rnq.bindingoffenrir.Constants;
 import org.rnq.bindingoffenrir.components.AnimationComponent;
 import org.rnq.bindingoffenrir.components.StateComponent;
 import org.rnq.bindingoffenrir.components.TextureComponent;
@@ -14,7 +15,8 @@ public class AnimationSystem extends IteratingSystem {
         super(Family.all(
                 AnimationComponent.class,
                 TextureComponent.class,
-                StateComponent.class).get());
+                StateComponent.class).get(),
+                Constants.PRIORITY_ANIMATION);
     }
 
     @Override

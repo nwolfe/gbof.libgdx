@@ -17,7 +17,8 @@ public class PhysicsSystem extends IteratingSystem {
     private float time_accumulator;
 
     public PhysicsSystem(World world) {
-        super(Family.all(PhysicsComponent.class, TransformComponent.class).get());
+        super(Family.all(PhysicsComponent.class, TransformComponent.class).get(),
+                Constants.PRIORITY_PHYSICS);
         this.world = world;
         bodies = new Array<Entity>();
         time_accumulator = 0f;

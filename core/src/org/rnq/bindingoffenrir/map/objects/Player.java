@@ -81,6 +81,12 @@ public class Player implements ObjectBuilder {
         CollisionComponent collision = new CollisionComponent();
         player.add(collision);
 
+        InputComponent input = new InputComponent();
+        player.add(input);
+
+        VelocityComponent velocity = new VelocityComponent();
+        player.add(velocity);
+
         engine.addEntity(player);
     }
 }

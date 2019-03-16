@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
+import org.rnq.bindingoffenrir.Constants;
 import org.rnq.bindingoffenrir.components.CollisionComponent;
 import org.rnq.bindingoffenrir.components.PlayerComponent;
 import org.rnq.bindingoffenrir.components.TypeComponent;
@@ -13,7 +14,8 @@ public class CollisionSystem extends IteratingSystem {
     public CollisionSystem() {
         // Only handle Player collisions
         // (for now? or separate systems for other types?)
-        super(Family.all(CollisionComponent.class, PlayerComponent.class).get());
+        super(Family.all(CollisionComponent.class, PlayerComponent.class).get(),
+                Constants.PRIORITY_COLLISION);
     }
 
     @Override

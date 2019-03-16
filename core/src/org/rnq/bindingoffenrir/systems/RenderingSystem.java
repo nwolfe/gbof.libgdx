@@ -22,7 +22,7 @@ public class RenderingSystem extends SortedIteratingSystem {
     public RenderingSystem(SpriteBatch batch, LevelManager levelManager) {
         super(Family.all(
                 TransformComponent.class, TextureComponent.class).get(),
-                new ZComparator());
+                new ZComparator(), Constants.PRIORITY_RENDERING);
         this.levelManager = levelManager;
         this.batch = batch;
         renderQueue = new Array<Entity>();

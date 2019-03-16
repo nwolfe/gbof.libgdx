@@ -1,5 +1,6 @@
 package org.rnq.bindingoffenrir;
 
+@SuppressWarnings("SpellCheckingInspection")
 public final class Constants {
     // These come from the art and level design.
     // Other values will be calculated based off these.
@@ -16,6 +17,10 @@ public final class Constants {
     private static final int GAME_WIDTH_IN_PIXELS = GAME_WIDTH_IN_TILES * TILE_SIZE_IN_PIXELS; // 256
     private static final int GAME_HEIGHT_IN_PIXELS = GAME_HEIGHT_IN_TILES * TILE_SIZE_IN_PIXELS; // 240
 
+    // Rendering
+    private static final float PPM = TILE_SIZE_IN_PIXELS;
+    public static final float PIXELS_TO_METERS = 1f / PPM; // This is our "unit scale"
+
     // Window
     public static final String TITLE = "G L E I P N I R :: Binding Of Fenrir";
     private static final int SCALE_FACTOR = 3;
@@ -25,8 +30,15 @@ public final class Constants {
     // Physics
     public static final float GRAVITY = -9.8f;
     public static final float MAX_STEP_TIME = 1/45f;
+    public static final float MAX_VELOCITY = 6f;
 
-    // Rendering
-    private static final float PPM = TILE_SIZE_IN_PIXELS;
-    public static final float PIXELS_TO_METERS = 1f / PPM; // This is our "unit scale"
+    // System Processing Order -- lower first
+    public static final int PRIORITY_PLAYERCONTROL = 0;
+    public static final int PRIORITY_PLAYERINPUT = 1;
+    public static final int PRIORITY_MOVEMENT = 2;
+    public static final int PRIORITY_PHYSICS = 3;
+    public static final int PRIORITY_COLLISION = 4;
+    public static final int PRIORITY_ANIMATION = 4;
+    public static final int PRIORITY_RENDERING = 5;
+    public static final int PRIORITY_PHYSICSDEBUG = 6;
 }

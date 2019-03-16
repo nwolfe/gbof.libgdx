@@ -11,4 +11,6 @@ final class Components {
     static final ComponentMapper<TypeComponent> type = ComponentMapper.getFor(TypeComponent.class);
     static final ComponentMapper<StateComponent> state = ComponentMapper.getFor(StateComponent.class);
     static final ComponentMapper<AnimationComponent> animation = ComponentMapper.getFor(AnimationComponent.class);
+    static final ComponentMapper<InputComponent> input = ComponentMapper.getFor(InputComponent.class);
+    static final ComponentMapper<VelocityComponent> velocity = ComponentMapper.getFor(VelocityComponent.class);
 }
