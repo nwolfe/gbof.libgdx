@@ -12,7 +12,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.rnq.bindingoffenrir.Constants;
 import org.rnq.bindingoffenrir.LevelManager;
+import org.rnq.bindingoffenrir.systems.CollisionSystem;
 import org.rnq.bindingoffenrir.systems.PhysicsDebugSystem;
+import org.rnq.bindingoffenrir.systems.PhysicsSystem;
 import org.rnq.bindingoffenrir.systems.RenderingSystem;
 
 public class ECSGameScreen extends ScreenAdapter {
@@ -26,7 +28,7 @@ public class ECSGameScreen extends ScreenAdapter {
     public ECSGameScreen(ScreenManager screenManager) {
         this.screenManager = screenManager;
         world = new World(new Vector2(0, Constants.GRAVITY), true);
-        // world.setContactListener();
+        world.setContactListener(new CollisionSystem.ContactListener());
         batch = new SpriteBatch();
         levelManager = new LevelManager();
         engine = new PooledEngine();
@@ -35,6 +37,8 @@ public class ECSGameScreen extends ScreenAdapter {
                 Constants.GAME_HEIGHT_IN_TILES, renderingSystem.camera);
 
         engine.addSystem(renderingSystem);
+        engine.addSystem(new CollisionSystem());
+        engine.addSystem(new PhysicsSystem(world));
         engine.addSystem(new PhysicsDebugSystem(world, renderingSystem.camera));
 
         levelManager.currentLevel().build(engine, world);

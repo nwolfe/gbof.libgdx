@@ -24,6 +24,7 @@ public final class Constants {
 
     // Physics
     public static final float GRAVITY = -9.8f;
+    public static final float MAX_STEP_TIME = 1/45f;
 
     // Rendering
     private static final float PPM = TILE_SIZE_IN_PIXELS;
