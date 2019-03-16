@@ -2,6 +2,8 @@ package org.rnq.bindingoffenrir.map.objects;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
@@ -13,6 +15,10 @@ import org.rnq.bindingoffenrir.Constants;
 import org.rnq.bindingoffenrir.components.*;
 
 public class Player implements ObjectBuilder {
+    private enum State {
+        IDLE
+    }
+
     @Override
     public boolean canBuild(MapObject object) {
         return "player".equals(object.getName());
@@ -23,8 +29,23 @@ public class Player implements ObjectBuilder {
         Entity player = engine.createEntity();
         player.add(new PlayerComponent());
 
+        TypeComponent type = new TypeComponent();
+        type.type = TypeComponent.Type.PLAYER;
+        player.add(type);
+
+        StateComponent state = new StateComponent();
+        state.set(State.IDLE.name());
+        state.isLooping = true;
+        player.add(state);
+
+        AnimationComponent animation = new AnimationComponent();
+        animation.animations.put(State.IDLE.name(),
+                new Animation<TextureRegion>(0.7f,
+                        Assets.instance.playerIdleStrip.getFrames()));
+        player.add(animation);
+
         TextureComponent texture = new TextureComponent();
-        texture.region = Assets.instance.playerIdleStrip.getFrames()[0];
+        texture.region = animation.animations.get(State.IDLE.name()).getKeyFrames()[0];
         player.add(texture);
 
         // Convert the position from pixels -> meters now so it's
@@ -37,8 +58,6 @@ public class Player implements ObjectBuilder {
         // everything else so cut it in half again.
         width /= 4f;
         height /= 2f;
-
-        // TODO Animation
 
         TransformComponent transform = new TransformComponent();
         Rectangle r = ((RectangleMapObject) object).getRectangle();
@@ -61,10 +80,6 @@ public class Player implements ObjectBuilder {
 
         CollisionComponent collision = new CollisionComponent();
         player.add(collision);
-
-        TypeComponent type = new TypeComponent();
-        type.type = TypeComponent.Type.PLAYER;
-        player.add(type);
 
         engine.addEntity(player);
     }

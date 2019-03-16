@@ -12,10 +12,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.rnq.bindingoffenrir.Constants;
 import org.rnq.bindingoffenrir.LevelManager;
-import org.rnq.bindingoffenrir.systems.CollisionSystem;
-import org.rnq.bindingoffenrir.systems.PhysicsDebugSystem;
-import org.rnq.bindingoffenrir.systems.PhysicsSystem;
-import org.rnq.bindingoffenrir.systems.RenderingSystem;
+import org.rnq.bindingoffenrir.systems.*;
 
 public class GameScreen extends ScreenAdapter {
     private final ScreenManager screenManager;
@@ -37,6 +34,7 @@ public class GameScreen extends ScreenAdapter {
                 Constants.GAME_HEIGHT_IN_TILES, renderingSystem.camera);
 
         engine.addSystem(renderingSystem);
+        engine.addSystem(new AnimationSystem());
         engine.addSystem(new CollisionSystem());
         engine.addSystem(new PhysicsSystem(world));
         engine.addSystem(new PhysicsDebugSystem(world, renderingSystem.camera));

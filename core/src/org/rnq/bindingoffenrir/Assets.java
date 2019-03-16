@@ -13,7 +13,7 @@ import java.util.Collection;
 // Put things here that can be loaded by the LibGDX AssetManager class.
 // Click into the definition to see what classes it supports.
 @SuppressWarnings("SpellCheckingInspection")
-public class Assets {
+public final class Assets {
     public Asset<Texture> sampleBgImg = image("badlogic.jpg");
     public Asset<TiledMap> sampleLevel = map("sample/sample_level.tmx");
     public Asset<Skin> uiSkin = skin("pixthulhu/pixthulhu-ui.json");

@@ -9,4 +9,6 @@ final class Components {
     static final ComponentMapper<PhysicsComponent> physics = ComponentMapper.getFor(PhysicsComponent.class);
     static final ComponentMapper<CollisionComponent> collision = ComponentMapper.getFor(CollisionComponent.class);
     static final ComponentMapper<TypeComponent> type = ComponentMapper.getFor(TypeComponent.class);
+    static final ComponentMapper<StateComponent> state = ComponentMapper.getFor(StateComponent.class);
+    static final ComponentMapper<AnimationComponent> animation = ComponentMapper.getFor(AnimationComponent.class);
 }
