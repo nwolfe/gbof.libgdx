@@ -14,8 +14,7 @@ public class ScreenManager {
     public ScreenManager(Gleipnir game) {
         this.game = game;
         titleScreen = new TitleScreen(this);
-        gameScreen = new ECSGameScreen(this);
-//        gameScreen = new GameScreen(this);
+        gameScreen = new GameScreen(this);
         settingsScreen = new PreviousScreen(new SettingsScreen(this));
         pauseScreen = new PreviousScreen(new PauseScreen(this));
     }
