@@ -1,5 +1,7 @@
 package org.rnq.bindingoffenrir;
 
+import org.rnq.bindingoffenrir.map.Level;
+
 public class LevelManager {
     private Level current;
 

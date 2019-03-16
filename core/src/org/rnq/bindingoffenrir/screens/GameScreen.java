@@ -5,8 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -18,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.rnq.bindingoffenrir.Assets;
-import org.rnq.bindingoffenrir.Objects;
 import org.rnq.bindingoffenrir.StepCallback;
 
 public class GameScreen extends ScreenAdapter {
@@ -50,9 +47,9 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void buildLevel(TiledMap map) {
-        for (MapLayer layer : map.getLayers())
-            for (MapObject object : layer.getObjects())
-                Objects.build(object, stage, world);
+//        for (MapLayer layer : map.getLayers())
+//            for (MapObject object : layer.getObjects())
+//                Objects.build(object, stage, world);
     }
 
     private static final Array<Body> bodies = new Array<Body>();
