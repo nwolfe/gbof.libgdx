@@ -1,6 +1,6 @@
-package org.rnq.bindingoffenrir;
+package org.rnq.bindingoffenrir.map;
 
-import org.rnq.bindingoffenrir.map.Level;
+import org.rnq.bindingoffenrir.Assets;
 
 public class LevelManager {
     private Level current;

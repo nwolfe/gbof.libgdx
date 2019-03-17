@@ -6,7 +6,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import org.rnq.bindingoffenrir.components.TypeComponent;
-import org.rnq.bindingoffenrir.map.EntityBuilder;
+import org.rnq.bindingoffenrir.entities.EntityBuilder;
 
 public class Ground implements ObjectFactory {
     @Override
@@ -18,8 +18,11 @@ public class Ground implements ObjectFactory {
     public void build(MapObject object, PooledEngine engine, World world) {
         new EntityBuilder(engine)
                 .type(TypeComponent.Type.GROUND)
-                .physics((RectangleMapObject) object,
-                        BodyDef.BodyType.StaticBody, 0f, world)
+                .physicsBegin((RectangleMapObject) object)
+                    .box()
+                    .type(BodyDef.BodyType.StaticBody)
+                    .density(0f)
+                .physicsEnd(world)
                 .collision()
                 .build();
     }

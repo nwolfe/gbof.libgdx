@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import org.rnq.bindingoffenrir.Assets;
 import org.rnq.bindingoffenrir.components.TypeComponent;
-import org.rnq.bindingoffenrir.map.EntityBuilder;
+import org.rnq.bindingoffenrir.entities.EntityBuilder;
 
 public class Player implements ObjectFactory {
     private enum State {
@@ -33,8 +33,11 @@ public class Player implements ObjectFactory {
                 .texture(idleFrames[0])
                 .setWidthScaling(0.5f)
                 .transform((RectangleMapObject) object, 1f)
-                .physicsFromTextureTransform(
-                        BodyDef.BodyType.DynamicBody, 0f, world)
+                .physicsBegin()
+                    .box()
+                    .type(BodyDef.BodyType.DynamicBody)
+                    .density(0f)
+                .physicsEnd(world)
                 .collision()
                 .input()
                 .velocity()

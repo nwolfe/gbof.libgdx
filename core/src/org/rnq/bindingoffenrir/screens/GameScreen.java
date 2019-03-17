@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.rnq.bindingoffenrir.Constants;
-import org.rnq.bindingoffenrir.LevelManager;
+import org.rnq.bindingoffenrir.map.LevelManager;
 import org.rnq.bindingoffenrir.systems.*;
 
 public class GameScreen extends ScreenAdapter {

@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import org.rnq.bindingoffenrir.Constants;
-import org.rnq.bindingoffenrir.LevelManager;
+import org.rnq.bindingoffenrir.map.LevelManager;
 import org.rnq.bindingoffenrir.components.TextureComponent;
 import org.rnq.bindingoffenrir.components.TransformComponent;
 

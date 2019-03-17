@@ -1,4 +1,4 @@
-package org.rnq.bindingoffenrir.map;
+package org.rnq.bindingoffenrir.entities;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
@@ -9,13 +9,11 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.Body;
 import org.rnq.bindingoffenrir.Constants;
 import org.rnq.bindingoffenrir.components.*;
 
-public class EntityBuilder {
+public final class EntityBuilder {
     private final Entity entity;
     private final PooledEngine engine;
 
@@ -40,7 +38,7 @@ public class EntityBuilder {
     }
 
     public EntityBuilder type(TypeComponent.Type type) {
-        Gdx.app.log("entity", "set type " + type);
+        Gdx.app.log("entity", "type " + type);
         TypeComponent t = new TypeComponent();
         t.type = type;
         entity.add(t);
@@ -48,7 +46,7 @@ public class EntityBuilder {
     }
 
     public EntityBuilder state(String state, boolean isLooping) {
-        Gdx.app.log("entity", "set state " + state);
+        Gdx.app.log("entity", "state " + state);
         StateComponent s = new StateComponent();
         s.set(state);
         s.isLooping = isLooping;
@@ -57,7 +55,7 @@ public class EntityBuilder {
     }
 
     public EntityBuilder animation(String state, Animation<TextureRegion> animation) {
-        Gdx.app.log("entity", "set animation for " + state);
+        Gdx.app.log("entity", "animation for " + state);
         AnimationComponent a = entity.getComponent(AnimationComponent.class);
         if (a == null) {
             a = new AnimationComponent();
@@ -68,7 +66,7 @@ public class EntityBuilder {
     }
 
     public EntityBuilder texture(TextureRegion region) {
-        Gdx.app.log("entity", "set texture region");
+        Gdx.app.log("entity", "texture region " + region);
         TextureComponent t = new TextureComponent();
         t.region = region;
         entity.add(t);
@@ -98,7 +96,7 @@ public class EntityBuilder {
      * this will attempt to use that texture for width/height values.
      */
     public EntityBuilder transform(RectangleMapObject object, float renderPriority) {
-        Gdx.app.log("entity", "set transform from texture");
+        Gdx.app.log("entity", "transform from texture");
         TransformComponent t = new TransformComponent();
         float x = object.getRectangle().x * Constants.PIXELS_TO_METERS;
         float y = object.getRectangle().y * Constants.PIXELS_TO_METERS;
@@ -110,62 +108,35 @@ public class EntityBuilder {
         return this;
     }
 
-    /**
-     * Assumes {@link #texture(TextureRegion)} and
-     * {@link #transform(RectangleMapObject, float)}
-     * have been called.
-     *
-     * NOTE set density to 0f for static bodies.
-     */
-     // TODO extract physics* methods out into their own builder
-     // TODO and provide methods to construct new builders on this class.
-    public EntityBuilder physicsFromTextureTransform(BodyDef.BodyType type,
-                                                     float density, World world)
-    {
-        Gdx.app.log("entity", "set physics from texture and transform");
-        PhysicsComponent p = new PhysicsComponent();
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = type;
+    public BodyBuilder physicsBegin() {
+        Gdx.app.log("entity", "physics body from texture/transform");
+        PhysicsComponent physics = new PhysicsComponent();
         Vector3 position = entity.getComponent(TransformComponent.class).position;
-        bodyDef.position.set(position.x, position.y);
-        p.body = world.createBody(bodyDef);
-        PolygonShape box = new PolygonShape();
-        Vector2 dimensions = getDimensionsFromTexture();
-        box.setAsBox(dimensions.x, dimensions.y);
-        p.body.createFixture(box, density);
-        box.dispose();
-        p.body.setUserData(entity);
-        entity.add(p);
-        return this;
+        Vector2 widthHeight = getDimensionsFromTexture();
+        return new BodyBuilder(this, physics)
+                .position(position.x, position.y)
+                .dimensions(widthHeight.x, widthHeight.y)
+                .userData(entity);
     }
 
-    /**
-     * NOTE set density to 0f for static bodies.
-     */
-    // TODO extract physics* methods out into their own builder
-    // TODO and provide methods to construct new builders on this class.
-    public EntityBuilder physics(RectangleMapObject object, BodyDef.BodyType type,
-                                 float density, World world)
-    {
-        Gdx.app.log("entity", "set physics from rectangle object");
+    public BodyBuilder physicsBegin(RectangleMapObject object) {
+        Gdx.app.log("entity", "physics body from rectangle map object");
+        PhysicsComponent physics = new PhysicsComponent();
         Rectangle r = object.getRectangle();
         Vector2 scaled = applyTransformations(r.getWidth(), r.getHeight());
         float width = scaled.x;
         float height = scaled.y;
         float x = (r.x * Constants.PIXELS_TO_METERS) + width;
         float y = (r.y * Constants.PIXELS_TO_METERS) + height;
-        PhysicsComponent p = new PhysicsComponent();
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = type;
-        bodyDef.position.set(x, y);
-        p.body = world.createBody(bodyDef);
-        PolygonShape box = new PolygonShape();
-        box.setAsBox(width, height);
-        p.body.createFixture(box, density);
-        box.dispose();
-        p.body.setUserData(entity);
-        entity.add(p);
-        return this;
+        return new BodyBuilder(this, physics)
+                .position(x, y)
+                .dimensions(width, height)
+                .userData(entity);
+    }
+
+    void bodyBuildFinished(Body body, PhysicsComponent physics) {
+        physics.body = body;
+        entity.add(physics);
     }
 
     /**
@@ -173,7 +144,7 @@ public class EntityBuilder {
      * player image happens to be wider than everything else.
      */
     public EntityBuilder setWidthScaling(float scaleWidth) {
-        Gdx.app.log("entity", "set additional width scaling to " + scaleWidth);
+        Gdx.app.log("entity", "additional width scaling set to " + scaleWidth);
         this.scaleWidth = scaleWidth;
         return this;
     }
