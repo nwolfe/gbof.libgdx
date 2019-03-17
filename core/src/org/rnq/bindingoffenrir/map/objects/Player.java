@@ -1,20 +1,17 @@
 package org.rnq.bindingoffenrir.map.objects;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import org.rnq.bindingoffenrir.Assets;
-import org.rnq.bindingoffenrir.Constants;
-import org.rnq.bindingoffenrir.components.*;
+import org.rnq.bindingoffenrir.components.TypeComponent;
+import org.rnq.bindingoffenrir.map.EntityBuilder;
 
-public class Player implements ObjectBuilder {
+public class Player implements ObjectFactory {
     private enum State {
         IDLE
     }
@@ -26,67 +23,21 @@ public class Player implements ObjectBuilder {
 
     @Override
     public void build(MapObject object, PooledEngine engine, World world) {
-        Entity player = engine.createEntity();
-        player.add(new PlayerComponent());
-
-        TypeComponent type = new TypeComponent();
-        type.type = TypeComponent.Type.PLAYER;
-        player.add(type);
-
-        StateComponent state = new StateComponent();
-        state.set(State.IDLE.name());
-        state.isLooping = true;
-        player.add(state);
-
-        AnimationComponent animation = new AnimationComponent();
-        animation.animations.put(State.IDLE.name(),
-                new Animation<TextureRegion>(0.7f,
-                        Assets.instance.playerIdleStrip.getFrames()));
-        player.add(animation);
-
-        TextureComponent texture = new TextureComponent();
-        texture.region = animation.animations.get(State.IDLE.name()).getKeyFrames()[0];
-        player.add(texture);
-
-        // Convert the position from pixels -> meters now so it's
-        // easier to sync with Box2D later, which works in meters
-        float width = texture.region.getRegionWidth() * Constants.PIXELS_TO_METERS;
-        float height = texture.region.getRegionHeight() * Constants.PIXELS_TO_METERS;
-
-        // Cut in half since we need to convert from center-based position to
-        // corner-based position. Assume the player art is twice as wide as
-        // everything else so cut it in half again.
-        width /= 4f;
-        height /= 2f;
-
-        TransformComponent transform = new TransformComponent();
-        Rectangle r = ((RectangleMapObject) object).getRectangle();
-        float x = (r.x * Constants.PIXELS_TO_METERS) + width;
-        float y = (r.y * Constants.PIXELS_TO_METERS) + height;
-        transform.position.set(x, y, 1f);
-        player.add(transform);
-
-        PhysicsComponent physics = new PhysicsComponent();
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(x, y);
-        physics.body = world.createBody(bodyDef);
-        PolygonShape box = new PolygonShape();
-        box.setAsBox(width, height);
-        physics.body.createFixture(box, 1f);
-        box.dispose();
-        player.add(physics);
-        physics.body.setUserData(player);
-
-        CollisionComponent collision = new CollisionComponent();
-        player.add(collision);
-
-        InputComponent input = new InputComponent();
-        player.add(input);
-
-        VelocityComponent velocity = new VelocityComponent();
-        player.add(velocity);
-
-        engine.addEntity(player);
+        TextureRegion[] idleFrames = Assets.instance.playerIdleStrip.getFrames();
+        new EntityBuilder(engine)
+                .player()
+                .type(TypeComponent.Type.PLAYER)
+                .state(State.IDLE.name(), true)
+                .animation(State.IDLE.name(),
+                        new Animation<TextureRegion>(0.7f, idleFrames))
+                .texture(idleFrames[0])
+                .setWidthScaling(0.5f)
+                .transform((RectangleMapObject) object, 1f)
+                .physicsFromTextureTransform(
+                        BodyDef.BodyType.DynamicBody, 0f, world)
+                .collision()
+                .input()
+                .velocity()
+                .build();
     }
 }

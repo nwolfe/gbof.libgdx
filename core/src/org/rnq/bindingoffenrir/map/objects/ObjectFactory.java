@@ -4,11 +4,11 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.physics.box2d.World;
 
-public interface ObjectBuilder {
+public interface ObjectFactory {
     boolean canBuild(MapObject object);
     void build(MapObject object, PooledEngine engine, World world);
 
-    ObjectBuilder[] all = new ObjectBuilder[]{
+    ObjectFactory[] all = new ObjectFactory[]{
             new Ground(),
             new Player()
     };

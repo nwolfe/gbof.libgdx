@@ -10,7 +10,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import org.rnq.bindingoffenrir.Constants;
-import org.rnq.bindingoffenrir.map.objects.ObjectBuilder;
+import org.rnq.bindingoffenrir.map.objects.ObjectFactory;
 
 public class Level {
     private final TiledMap map;
@@ -37,9 +37,9 @@ public class Level {
     }
     
     private void buildObject(MapObject object, PooledEngine engine, World world) {
-        for (ObjectBuilder builder : ObjectBuilder.all) {
-            if (builder.canBuild(object)) {
-                builder.build(object, engine, world);
+        for (ObjectFactory factory : ObjectFactory.all) {
+            if (factory.canBuild(object)) {
+                factory.build(object, engine, world);
                 return;
             }
         }
