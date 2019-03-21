@@ -3,6 +3,7 @@ package org.rnq.bindingoffenrir.entities;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -73,6 +74,14 @@ public final class EntityBuilder {
         return this;
     }
 
+    public EntityBuilder texture(Texture texture) {
+        Gdx.app.log("entity", "texture " + texture);
+        TextureComponent t = new TextureComponent();
+        t.texture = texture;
+        entity.add(t);
+        return this;
+    }
+
     public EntityBuilder collision() {
         Gdx.app.log("entity", "add collision");
         entity.add(new CollisionComponent());
@@ -91,11 +100,17 @@ public final class EntityBuilder {
         return this;
     }
 
+    public EntityBuilder transform(RectangleMapObject object, float renderPriority) {
+        return transform(object, renderPriority, false);
+    }
+
     /**
      * Assumes {@link #texture(TextureRegion)} has been called as
      * this will attempt to use that texture for width/height values.
      */
-    public EntityBuilder transform(RectangleMapObject object, float renderPriority) {
+    public EntityBuilder transform(RectangleMapObject object, float renderPriority,
+                                   boolean flipX)
+    {
         Gdx.app.log("entity", "transform from texture");
         TransformComponent t = new TransformComponent();
         float x = object.getRectangle().x * Constants.PIXELS_TO_METERS;
@@ -104,10 +119,16 @@ public final class EntityBuilder {
         x += dimensions.x; // width
         y += dimensions.y; // height
         t.position.set(x, y, renderPriority);
+        t.flipX = flipX;
         entity.add(t);
         return this;
     }
 
+    /**
+     * Uses dimensions from {@link #texture}; that must be set first.
+     * Or use {@link #physicsBegin(RectangleMapObject)} to get
+     * dimensions from the map object.
+     */
     public BodyBuilder physicsBegin() {
         Gdx.app.log("entity", "physics body from texture/transform");
         PhysicsComponent physics = new PhysicsComponent();
@@ -119,6 +140,10 @@ public final class EntityBuilder {
                 .userData(entity);
     }
 
+    /**
+     * Gets dimensions from the map object.
+     * Use {@link #physicsBegin()} to get dimensions from the texture.
+     */
     public BodyBuilder physicsBegin(RectangleMapObject object) {
         Gdx.app.log("entity", "physics body from rectangle map object");
         PhysicsComponent physics = new PhysicsComponent();
@@ -153,8 +178,17 @@ public final class EntityBuilder {
      * @return (width, height) as Vector(x, y) with additional scaling applied
      */
     private Vector2 getDimensionsFromTexture() {
-        TextureRegion region = entity.getComponent(TextureComponent.class).region;
-        return applyTransformations(region.getRegionWidth(), region.getRegionHeight());
+        TextureComponent t = entity.getComponent(TextureComponent.class);
+        if (t.region != null)
+            return applyTransformations(
+                    t.region.getRegionWidth(),
+                    t.region.getRegionHeight());
+        else if (t.texture != null)
+            return applyTransformations(
+                    t.texture.getWidth(),
+                    t.texture.getHeight());
+        else
+            return null;
     }
 
     /**

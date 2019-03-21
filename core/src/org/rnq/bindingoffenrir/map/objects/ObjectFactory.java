@@ -10,6 +10,7 @@ public interface ObjectFactory {
 
     ObjectFactory[] all = new ObjectFactory[]{
             new Ground(),
-            new Player()
+            new Player(),
+            new Baddie()
     };
 }
